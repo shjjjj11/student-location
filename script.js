@@ -74,7 +74,7 @@ function submitChoices() {
 
 function visualizeChoices() {
     const savedData = JSON.parse(localStorage.getItem("studentChoices")) || {};
-    const periods = ["8교시/9교시", "야자 1텀", "야자 2텀"];
+    const periods = ["8/9교시", "야자 1텀", "야자 2텀"];
     const locationCounts = {};
 
     locations.forEach(location => {
