@@ -161,24 +161,26 @@
     });
   }
 
-  function submitChoices() {
+function submitChoices() {
     const rows = document.querySelectorAll("#studentTable tbody tr");
     const choices = {};
 
     rows.forEach(row => {
-      const cells = row.querySelectorAll("td");
-      const studentName = cells[0].textContent;
-      choices[studentName] = [];
+        const cells = row.querySelectorAll("td");
+        const studentName = cells[0].textContent;
+        choices[studentName] = [];
 
-      for (let i = 1; i < cells.length; i++) {
-        const select = cells[i].querySelector("select");
-        choices[studentName].push(select.value);
-      }
+        for (let i = 1; i < cells.length; i++) {
+            const select = cells[i].querySelector("select");
+            choices[studentName].push(select.value);
+        }
     });
 
+    console.log(choices); // 저장하기 전에 데이터를 로그로 출력
     saveChoices(choices);
     alert("선택한 내용이 저장되었습니다.");
-  }
+}
+
 
   function getRandomColor() {
     const letters = '0123456789ABCDEF';
