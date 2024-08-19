@@ -75,7 +75,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js";
   import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
-  import { Chart } from "https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.min.js";
+  import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.min.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB5cc4fun2wCl_zgCU550QvqgDGyxZJhgU",
@@ -114,22 +114,8 @@
     return select;
   }
 
-  function saveChoices() {
-    const rows = document.querySelectorAll("#studentTable tbody tr");
-    const choices = {};
-
-    rows.forEach(row => {
-      const cells = row.querySelectorAll("td");
-      const studentName = cells[0].textContent;
-      choices[studentName] = [];
-
-      for (let i = 1; i < cells.length; i++) {
-        const select = cells[i].querySelector("select");
-        choices[studentName].push(select.value);
-      }
-    });
-
-    set(ref(database, 'studentChoices/'), choices)
+  function saveChoices(studentChoices) {
+    set(ref(database, 'studentChoices/'), studentChoices)
       .then(() => {
         console.log("Data saved successfully!");
       })
@@ -151,80 +137,6 @@
   function updateTable(data) {
     const tbody = document.querySelector("#studentTable tbody");
     tbody.innerHTML = "";
-
     students.forEach(student => {
       const row = document.createElement("tr");
-      const nameCell = document.createElement("td");
-      nameCell.textContent = student;
-      row.appendChild(nameCell);
-
-      for (let i = 0; i < periods.length; i++) {
-        const cell = document.createElement("td");
-        const savedValue = data && data[student] ? data[student][i] : "";
-        cell.appendChild(createSelect(savedValue));
-        row.appendChild(cell);
-      }
-
-      tbody.appendChild(row);
-    });
-  }
-
-  function visualizeChoices(data) {
-    const locationCounts = {};
-    locations.forEach(location => {
-      locationCounts[location] = [0, 0, 0];
-    });
-
-    Object.values(data || {}).forEach(studentChoices => {
-      studentChoices.forEach((choice, periodIndex) => {
-        locationCounts[choice][periodIndex]++;
-      });
-    });
-
-    const chartData = {
-      labels: periods,
-      datasets: locations.map(location => ({
-        label: location,
-        data: locationCounts[location],
-        backgroundColor: getRandomColor(),
-      }))
-    };
-
-    const ctx = document.getElementById('chart').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: chartData,
-      options: {
-        responsive: true,
-        scales: {
-          x: {
-            stacked: true,
-          },
-          y: {
-            stacked: true,
-            beginAtZero: true,
-          }
-        }
-      }
-    });
-  }
-
-  function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    fetchChoices();
-  });
-
-  function submitChoices() {
-    saveChoices();
-  }
-</script>
-</body>
-</html>
+      const nameCell
